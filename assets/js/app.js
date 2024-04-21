@@ -84,10 +84,122 @@ function createCard(index) {
     
 }
 
-
+genres = [];
+genres.push('All')
 
 for (let i = 0; i < games.length; i++) {
     createCard(i);
+    if (!genres.includes(games[i].genre)) {
+        genres.push(games[i].genre)
+    }
+}
+
+
+header.appendChild(document.createElement('div'));
+let divGenres = header.querySelector('div');
+divGenres.classList.add('div-genre');
+divGenres = header.querySelector('.div-genre');
+
+function createButton() {
+    for (let i = 0; i < 2; i++) {
+        divGenres.appendChild(document.createElement('button'));
+    }
+    let button = document.querySelectorAll('button');
+    button[0].classList.add('filter-button');
+    button[1].classList.add('hide-button');
     
 }
+
+createButton();
+const filterButton = divGenres.querySelector('.filter-button');
+const hideButton = divGenres.querySelector('.hide-button');
+filterButton.innerText = "Filter";
+hideButton.innerText = "Hide";
+hideButton.style.display = "none";
+
+divGenres.appendChild(document.createElement('nav'));
+const nav = divGenres.querySelector('nav');
+
+let genreSelected = [];
+
+for (let i = 0; i < genres.length; i++) {
+    nav.appendChild(document.createElement('input'));
+    let input = nav.querySelectorAll('input');
+    input[i].setAttribute('type', 'checkbox');
+    input[i].value = genres[i];
+    nav.appendChild(document.createElement('label'));
+    input[i].addEventListener('change', (e) => {
+        console.log('change');
+        if (e.target.checked) {
+            console.log(genreSelected);
+            if (!genreSelected.includes('All')) {
+                if (!genreSelected.includes(input[i].value)) {
+                    if (input[i].value === "All") {
+                        genreSelected = [];
+                    }
+                    genreSelected.push(input[i].value);
+                    console.log(genreSelected);   
+                }
+            }
+            
+        }else {
+            if(genreSelected.includes(input[i].value)) {
+                let genre = genreSelected.indexOf(input[i].value);
+                console.log(genre + ' selected');
+                genreSelected.splice(genre, 1);
+                console.log(genreSelected);
+                  
+            }
+        }
+    })
+    
+}
+
+let input = nav.querySelectorAll('input');
+let label = nav.querySelectorAll('label');
+function checkboxDisplay(display) {
+    for (let i = 0; i < genres.length; i++) {
+        label[i].textContent = genres[i];
+        label[i].style.marginRight = "15px";
+        input[i].style.display = display;
+        label[i].style.display = display;
+    }
+}
+checkboxDisplay("none");
+
+
+filterButton.addEventListener('click', () => {
+    filterButton.style.display = 'none';
+    hideButton.style.display = 'block';
+    checkboxDisplay("block");
+})
+
+hideButton.addEventListener('click', () => {
+    hideButton.style.display = 'none';
+    filterButton.style.display = 'block';
+    checkboxDisplay("none");
+})
+
+let filterGames = [];
+
+for (let i = 0; i < games.length; i++) {
+    const game = games[i];
+    for (let j = 0; j < genreSelected.length; j++) {
+        const selected = genresSelected[j];
+        if (game.genre.includes(selected)) {
+            filterGames.push(game);
+            console.log(filterGames);
+        }
+        
+    }
+    
+    
+    
+}
+
+    
+
+
+
+
 
